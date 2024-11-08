@@ -40,6 +40,12 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
     val uiState: HomeUIState by homeViewModel.uiState.collectAsState()
 
+    if (uiState.showAddTransaction) {
+        AddTransaction(
+            onDismiss = { homeViewModel.dismissAddDialog() },
+            onTransactionAdded = { title, amount, date -> homeViewModel.onAddTransaction(title, amount, date) })
+    }
+
     Column {
         Text(
             "Hello David",
@@ -48,7 +54,9 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(start = 24.dp, top = 24.dp)
         )
-        Balance(isLoading = uiState.isLoading, totalAmount = uiState.totalAmount)
+        Balance(isLoading = uiState.isLoading, totalAmount = uiState.totalAmount) {
+            homeViewModel.onAddTransactionSelected()
+        }
         Text(
             text = "Transacciones recientes",
             color = Color.Black,
@@ -96,7 +104,7 @@ fun TransactionItem(transactionModel: TransactionModel) {
 }
 
 @Composable
-fun Balance(isLoading: Boolean, totalAmount: String) {
+fun Balance(isLoading: Boolean, totalAmount: String, onAddTransaction: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(24.dp)
@@ -129,7 +137,7 @@ fun Balance(isLoading: Boolean, totalAmount: String) {
 
                 }
 
-                IconButton(onClick = {}) {
+                IconButton(onClick = { onAddTransaction() }) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = "", modifier = Modifier.size(44.dp)

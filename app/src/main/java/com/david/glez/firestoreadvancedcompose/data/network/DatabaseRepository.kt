@@ -1,5 +1,6 @@
 package com.david.glez.firestoreadvancedcompose.data.network
 
+import com.david.glez.firestoreadvancedcompose.data.TransactionDto
 import com.david.glez.firestoreadvancedcompose.data.network.response.TransactionResponse
 import com.david.glez.firestoreadvancedcompose.domain.model.TransactionModel
 import com.google.firebase.Timestamp
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
@@ -49,5 +51,20 @@ class DatabaseRepository @Inject constructor(private val database: FirebaseFires
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun addTransaction(dto: TransactionDto) {
+        val customId = getCustomId()
+        val model = hashMapOf(
+            "id" to customId,
+            "title" to dto.title,
+            "date" to dto.date,
+            "amount" to dto.amount
+        )
+        database.collection(TRANSACTIONS).document(customId).set(model)
+    }
+
+    private fun getCustomId(): String {
+        return Date().time.toString()
     }
 }
