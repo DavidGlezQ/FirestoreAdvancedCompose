@@ -34,7 +34,7 @@ class DatabaseRepository @Inject constructor(private val database: FirebaseFires
     private fun transactionToDomain(transactionResponse: TransactionResponse): TransactionModel? {
         if (transactionResponse.date == null || transactionResponse.amount == null || transactionResponse.id == null || transactionResponse.title == null) return null
         val date = timestampToString(transactionResponse.date) ?: return null
-        return  TransactionModel(
+        return TransactionModel(
             id = transactionResponse.id,
             title = transactionResponse.title,
             amount = transactionResponse.amount,
