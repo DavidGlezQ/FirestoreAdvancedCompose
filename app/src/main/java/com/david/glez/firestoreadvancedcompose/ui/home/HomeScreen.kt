@@ -86,7 +86,12 @@ fun TransactionItem(transactionModel: TransactionModel) {
             Text(text = transactionModel.date, fontSize = 14.sp)
         }
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = transactionModel.amount, color = Color.Red, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = String.format("%.2f$", transactionModel.amount),
+            color = Color.Red,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 

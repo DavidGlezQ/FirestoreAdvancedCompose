@@ -11,7 +11,7 @@ composeBom = "2024.04.01"
 
 hilt = "2.48"
 google-play-services = "4.4.2"
-firebase-bom = "33.4.0"
+firebase-bom = "33.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
