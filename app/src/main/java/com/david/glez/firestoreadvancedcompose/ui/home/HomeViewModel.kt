@@ -66,6 +66,10 @@ class HomeViewModel @Inject constructor(private val databaseRepository: Database
             date = timeStamp
         )
     }
+
+    fun onItemRemove(id: String) {
+        databaseRepository.removeTransaction(id)
+    }
 }
 
 data class HomeUIState(

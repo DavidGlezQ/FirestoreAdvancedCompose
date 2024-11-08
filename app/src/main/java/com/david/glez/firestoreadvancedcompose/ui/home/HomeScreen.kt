@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +35,8 @@ import com.david.glez.firestoreadvancedcompose.domain.model.TransactionModel
 import com.david.glez.firestoreadvancedcompose.ui.theme.Grey
 import com.david.glez.firestoreadvancedcompose.ui.theme.Purple40
 import com.david.glez.firestoreadvancedcompose.ui.theme.Purple80
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
@@ -43,7 +46,13 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
     if (uiState.showAddTransaction) {
         AddTransaction(
             onDismiss = { homeViewModel.dismissAddDialog() },
-            onTransactionAdded = { title, amount, date -> homeViewModel.onAddTransaction(title, amount, date) })
+            onTransactionAdded = { title, amount, date ->
+                homeViewModel.onAddTransaction(
+                    title,
+                    amount,
+                    date
+                )
+            })
     }
 
     Column {
@@ -64,15 +73,33 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
-        Transactions(transactions = uiState.transactions)
+        Transactions(
+            transactions = uiState.transactions,
+            onItemRemove = { homeViewModel.onItemRemove(it) })
     }
 }
 
 @Composable
-fun Transactions(transactions: List<TransactionModel>) {
+fun Transactions(transactions: List<TransactionModel>, onItemRemove: (String) -> Unit) {
     LazyColumn {
         items(transactions) {
-            TransactionItem(transactionModel = it)
+            val swipeLeft = SwipeAction(
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = null,
+                        modifier = Modifier.padding(16.dp).size(36.dp)
+                    )
+                },
+                background = Color.Red,
+                isUndo = true,
+                onSwipe = {
+                    onItemRemove(it.id)
+                }
+            )
+            SwipeableActionsBox(endActions = listOf(swipeLeft)) {
+                TransactionItem(transactionModel = it)
+            }
         }
     }
 }

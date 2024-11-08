@@ -67,4 +67,8 @@ class DatabaseRepository @Inject constructor(private val database: FirebaseFires
     private fun getCustomId(): String {
         return Date().time.toString()
     }
+
+    fun removeTransaction(id: String) {
+        database.collection(TRANSACTIONS).document(id).delete()
+    }
 }
